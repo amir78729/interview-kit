@@ -19,10 +19,45 @@ Public reusable content is committed. User-specific answers, scores, goals, comp
 - `resources/interview-frameworks/`, `resources/references/`: reusable methods and source guidance.
 - `templates/`: authoritative schemas and section expectations.
 - `docs/`: system documentation.
-- `.opencode/commands/`, `.opencode/agents/`: Markdown instructions interpreted by OpenCode.
+- `.opencode/commands/`, `.opencode/agents/`: Markdown slash commands and specialized AI agent definitions interpreted by OpenCode.
 - `.personal/`: ignored private workspace; its committed README is documentation only.
 
 Use kebab-case filenames and relative Markdown links. Avoid empty placeholder directories and unnecessary files.
+
+## Slash commands
+
+Interview Kit provides built-in slash commands defined as Markdown instructions in `.opencode/commands/`. The filename defines the command name (for example, `.opencode/commands/interview.md` defines `/interview`). Arguments are passed via `$ARGUMENTS` or positional placeholders (`$1`, `$2`, etc.). Where specified, commands invoke specialized subagents in `.opencode/agents/`.
+
+The available slash commands are:
+
+### Practice and learning
+
+- `/interview [domain] [level] [minutes]` — Start a realistic, time-aware mock interview from a reusable definition and record private session evidence (delegates to `interviewer`).
+- `/question <query>` — Find a repository question and optionally explain it.
+- `/hint <question-id>` — Reveal only the next progressive hint without exposing the solution.
+- `/explain <topic>` — Explain a topic at interview depth using linked repository material.
+- `/evaluate <question/session and answer>` — Evaluate candidate evidence against an established rubric (delegates to `interviewer`).
+
+### Study and progress
+
+- `/study-plan <goal and period>` — Create a personalized private study plan under `.personal/study-plans/` by default (delegates to `study-coach`).
+- `/progress` — Summarize private learning progress and sessions from `.personal/` without leaking data publicly (delegates to `study-coach`).
+- `/tip <query>` — Find an existing interview tip or safely draft one when requested.
+- `/cheatsheet <topic>` — Retrieve an existing scan-first cheatsheet or safely create one when requested.
+
+### Content authoring
+
+- `/add-question <description>` — Safely author a complete, non-duplicate question from the appropriate template (delegates to `content-author`).
+- `/add-topic <domain> <topic>` — Create a non-duplicate topic learning map linking repository material (delegates to `content-author`).
+- `/generate-interview <domain> <level> <minutes> [focus]` — Create a reusable public interview definition referencing real question IDs (delegates to `content-author`).
+
+### Review and maintenance
+
+- `/review [path or current content]` — Review targeted content for metadata schema, accuracy, links, duplication, and privacy (delegates to `reviewer`).
+- `/audit-content` — Audit repository-wide content consistency, schema compliance, references, and privacy boundaries (delegates to `reviewer`).
+- `/help [command]` — List all available slash commands or show detailed syntax and examples for a specific command.
+
+All creation and authoring commands must follow the [safe workflow](#safe-workflow-for-every-creation-command) below and maintain strict privacy boundaries. See [docs/slash-commands.md](docs/slash-commands.md) for full usage reference.
 
 ## Safe workflow for every creation command
 
